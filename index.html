@@ -4,9 +4,47 @@
         <title>Calculator</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="css/style.css" rel="stylesheet">
+        <!-- <link href="css/style.css" rel="stylesheet"> -->
+        <script src = "calculator.js" defer></script>
     </head>
     <body>
-
+        <div class="hero">
+            <h1>Calculator</h1>
+        </div>
+        <div class="calculator">
+            <div class="display">
+                <div id="history-display"></div>
+                <div id="default-display">0</div>
+            </div>
+            <div class="buttons">
+                <div class="buttons-row">
+                    <button class="clear-button">C</button>
+                </div>
+                <div class="buttons-row">
+                    <button class="button number-buttons">7</button>
+                    <button class="button number-buttons">8</button>
+                    <button class="button number-buttons">9</button>
+                    <button class="button operator-buttons">/</button>
+                </div>
+                <div class="buttons-row">
+                    <button class="button number-buttons">4</button>
+                    <button class="button number-buttons">5</button>
+                    <button class="button number-buttons">6</button>
+                    <button class="button operator-buttons">*</button>
+                </div>
+                <div class="buttons-row">
+                    <button class="button number-buttons">1</button>
+                    <button class="button number-buttons">2</button>
+                    <button class="button number-buttons">3</button>
+                    <button class="button operator-buttons">-</button>
+                </div>
+                <div class="buttons-row">
+                    <button class="button number-buttons">0</button>
+                    <button class="button number-buttons">.</button>
+                    <button class="button equal-button">=</button>
+                    <button class="button operator-buttons">+</button>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
