@@ -1,9 +1,10 @@
 // Operation Logic
-let firstNumber = 0;
-let op = '';
-let secondNumber = 0;
-let ans = 0;
-const SYNTAX_ERROR = 'Syntax Error';
+let firstNumber = null;
+let op = null;
+let secondNumber = null;
+const MATH_ERROR = 'Math Error';
+
+let isOperator = false;
 
 // Display
 let historyValue = '';
@@ -14,63 +15,100 @@ const display = document.querySelector('#default-display');
 const historyDisplay = document.querySelector('#history-display');
 const numberButtons = document.querySelectorAll('.number-buttons');
 const operators = document.querySelectorAll('.operator-buttons');
-const clear = document.querySelector('.clear-button');
 const equal = document.querySelector('.equal-button');
+const clear = document.querySelector('.clear-button');
+const backspace  = document.querySelector('.delete-button');
 
 // Event Listeners
 clear.addEventListener('click', clearAll);
-equal.addEventListener('click', function() {
+
+backspace.addEventListener('click', () => {
+    if (displayValue.length > 0) {
+        displayValue = displayValue.slice(0, -1);
+        display.textContent = displayValue;
+        const lastChar = displayValue.charAt(displayValue.length - 1);
+        if (lastChar === '+' || lastChar === '-' || lastChar === '*' || lastChar === '/' || lastChar === '%') {
+            isOperator = true;
+        } else if (lastChar === '') {
+            display.textContent = '0';
+        }
+    }
+});
+
+equal.addEventListener('click', () => {
     calculate(equal.textContent)
 });
 
 numberButtons.forEach((button) => {
     button.addEventListener('click', () => {
-        if (ans !== 0 && op === '') {
-            clearAll();
-        }
-        displayValue += button.textContent;
-        display.textContent = displayValue;
+        registerNumber(button.textContent);
     });
 });
 
 operators.forEach((operator) => {
     operator.addEventListener('click', () => {
-        if (op === '') {
-            console.log('save operator');
+        if (firstNumber === null) {
             firstNumber = Number(displayValue);
+            console.log(firstNumber);
             op = operator.textContent;
             displayValue += op;
             display.textContent = displayValue;
-        } else if (op !== '' && firstNumber !== 0) { 
-            console.log('calculate with operator');
-            calculate(operator.textContent);
-        }
-        else {
-            console.log('change operator');
-            // print to the console the op and secondNumber
-            console.log(op, secondNumber);
+        } else if (isOperator) {
             op = operator.textContent;
-            displayValue = displayValue.slice(0, -1) + op;
+            console.log(displayValue);
+            displayValue = displayValue.slice(0, -1);
+            displayValue += op;
+            display.textContent = displayValue;
+        } else if (op === null) {
+            op = operator.textContent;
+            displayValue += op;
             display.textContent = displayValue;
         }
+        else if (firstNumber !== null && secondNumber === null) {
+            secondNumber = Number(displayValue.split(op)[1]);
+            console.log(secondNumber);
+            displayValue = operate(op, firstNumber, secondNumber);
+            historyValue = `${firstNumber} ${op} ${secondNumber}`;
+            firstNumber = displayValue;
+            secondNumber = null;
+            if (operator.textContent !== '=') {
+                op = operator.textContent;
+                displayValue += op;
+            } else {
+                op = null;
+            }
+            display.textContent = displayValue;
+            historyDisplay.textContent = historyValue;
+        }
+        isOperator = true;
     });
 });
 
 // Auxiliar Functions
+function registerNumber(digit) {
+    if (firstNumber !== 0 && op === '') {
+        clearAll();
+    }
+    isOperator = false;
+    displayValue += digit;
+    display.textContent = displayValue;
+}
+
 function calculate(button) {
-    if (op !== '') {
+    if (op !== null) {
         secondNumber = Number(displayValue.split(op)[1]);
-        displayValue = ans = operator(op, firstNumber, secondNumber);
-        if (displayValue === SYNTAX_ERROR) {
+        displayValue = operate(op, firstNumber, secondNumber);
+        if (displayValue === MATH_ERROR) {
             clearAll();
-            display.textContent = SYNTAX_ERROR;
+            display.textContent = MATH_ERROR;
             return;
         }
         historyValue = `${firstNumber} ${op} ${secondNumber}`;
-        firstNumber = ans;
-        secondNumber = 0;
+        firstNumber = displayValue;
+        secondNumber = null;
         if (button === '=') {
-            op = '';
+            op = null;
+            isOperator = false;
         }
         else {
             op = button;
@@ -82,14 +120,15 @@ function calculate(button) {
 }
 
 function clearAll() {
-    ans = 0;
-    historyValue = displayValue = op = '';
+    firstNumber = secondNumber = op = null;
+    isOperator = false;
+    historyValue = displayValue = '';
     display.textContent = '0';
     historyDisplay.textContent = '';
 }
 
 // Operation Functions
-function operator(op, firstNumber, secondNumber) {
+function operate(op, firstNumber, secondNumber) {
     switch (op) {
         case '+':
             return add(firstNumber, secondNumber);
@@ -99,6 +138,8 @@ function operator(op, firstNumber, secondNumber) {
             return multiply(firstNumber, secondNumber);
         case '/':
             return division(firstNumber, secondNumber);
+        case '%':
+            return percentage(firstNumber, secondNumber);
         default:
             return 'Invalid operator';
     }
@@ -118,8 +159,16 @@ function multiply(a, b) {
 
 function division(a, b) {
     if (b === 0) {
-        return SYNTAX_ERROR;
+        return MATH_ERROR;
     }
     return a / b;
+}
+
+function percentage(a, b) {
+    if (b == 0) {
+        b = 1;
+        secondNumber = 1;
+    }
+    return (a * b) / 100;
 }
 
