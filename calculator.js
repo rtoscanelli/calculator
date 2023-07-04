@@ -87,7 +87,7 @@ operators.forEach((operator) => {
 
 // Auxiliar Functions
 function registerNumber(digit) {
-    if (firstNumber !== 0 && op === '') {
+    if (firstNumber !== null && op === null) {
         clearAll();
     }
     isOperator = false;
