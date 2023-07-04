@@ -24,7 +24,6 @@ clear.addEventListener('click', clearAll);
 
 backspace.addEventListener('click', deleteInput);
 
-
 equal.addEventListener('click', () => {
     calculate(equal.textContent)
 });
@@ -37,43 +36,31 @@ numberButtons.forEach((button) => {
 
 operators.forEach((operator) => {
     operator.addEventListener('click', () => {
-        if (firstNumber === null) {
-            firstNumber = Number(displayValue);
-            console.log(firstNumber);
-            op = operator.textContent;
-            displayValue += op;
-            display.textContent = displayValue;
-        } else if (isOperator) {
-            op = operator.textContent;
-            console.log(displayValue);
-            displayValue = displayValue.slice(0, -1);
-            displayValue += op;
-            display.textContent = displayValue;
-        } else if (op === null) {
-            op = operator.textContent;
-            displayValue += op;
-            display.textContent = displayValue;
-        }
-        else if (firstNumber !== null && secondNumber === null) {
-            secondNumber = Number(displayValue.split(op)[1]);
-            console.log(secondNumber);
-            displayValue = operate(op, firstNumber, secondNumber);
-            historyValue = `${firstNumber} ${op} ${secondNumber}`;
-            firstNumber = displayValue;
-            secondNumber = null;
-            if (operator.textContent !== '=') {
-                op = operator.textContent;
-                displayValue += op;
-            } else {
-                op = null;
-            }
-            displayValue += '';
-            display.textContent = displayValue.slice(0,13);
-            historyDisplay.textContent = historyValue;
-        }
-        isOperator = true;
+        regiseterOperator(operator.textContent);
     });
 });
+
+function regiseterOperator(operator) {
+    if (firstNumber === null) {
+        firstNumber = Number(displayValue);
+        op = operator;
+        displayValue += op;
+        display.textContent = displayValue;
+    } else if (isOperator) {
+        op = operator;
+        displayValue = displayValue.slice(0, -1);
+        displayValue += op;
+        display.textContent = displayValue;
+    } else if (op === null) {
+        op = operator;
+        displayValue += op;
+        display.textContent = displayValue;
+    }
+    else if (firstNumber !== null && secondNumber === null) {
+        calculate(operator);
+    }
+    isOperator = true;
+}
 
 // Auxiliar Functions
 function registerNumber(digit) {
