@@ -18,6 +18,7 @@ const operators = document.querySelectorAll('.operator-buttons');
 const equal = document.querySelector('.equal-button');
 const clear = document.querySelector('.clear-button');
 const backspace  = document.querySelector('.delete-button');
+window.addEventListener('keydown', handleKeyboardInput);
 
 // Event Listeners
 clear.addEventListener('click', clearAll);
@@ -36,11 +37,41 @@ numberButtons.forEach((button) => {
 
 operators.forEach((operator) => {
     operator.addEventListener('click', () => {
-        regiseterOperator(operator.textContent);
+        registerOperator(operator.textContent);
     });
 });
 
-function regiseterOperator(operator) {
+// Keyboard Input Support
+function handleKeyboardInput(e) {
+    if (e.key === 'Backspace') {
+        deleteInput();
+        return ;
+    } else if (e.key === 'Enter' || e.key === '=') {
+        calculate('=');
+        return ;
+    } else if (e.key === 'Escape') {
+        clearAll();
+        return ;
+    } else if ((e.key >= 0 && e.key <= 9) || e.key === '.') {
+        registerNumber(e.key);
+        return ;
+    } else if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/' || e.key === '%') {
+        registerOperator(e.key);
+        return ;
+    } 
+}
+
+// Auxiliar Functions
+function registerNumber(digit) {
+    if (firstNumber !== null && op === null) {
+        clearAll();
+    }
+    isOperator = false;
+    displayValue += digit;
+    display.textContent = displayValue;
+}
+
+function registerOperator(operator) {
     if (firstNumber === null) {
         firstNumber = Number(displayValue);
         op = operator;
@@ -60,16 +91,6 @@ function regiseterOperator(operator) {
         calculate(operator);
     }
     isOperator = true;
-}
-
-// Auxiliar Functions
-function registerNumber(digit) {
-    if (firstNumber !== null && op === null) {
-        clearAll();
-    }
-    isOperator = false;
-    displayValue += digit;
-    display.textContent = displayValue;
 }
 
 function calculate(button) {
