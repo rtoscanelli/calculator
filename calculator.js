@@ -22,18 +22,8 @@ const backspace  = document.querySelector('.delete-button');
 // Event Listeners
 clear.addEventListener('click', clearAll);
 
-backspace.addEventListener('click', () => {
-    if (displayValue.length > 0) {
-        displayValue = displayValue.slice(0, -1);
-        display.textContent = displayValue;
-        const lastChar = displayValue.charAt(displayValue.length - 1);
-        if (lastChar === '+' || lastChar === '-' || lastChar === '*' || lastChar === '/' || lastChar === '%') {
-            isOperator = true;
-        } else if (lastChar === '') {
-            display.textContent = '0';
-        }
-    }
-});
+backspace.addEventListener('click', deleteInput);
+
 
 equal.addEventListener('click', () => {
     calculate(equal.textContent)
@@ -127,6 +117,28 @@ function clearAll() {
     historyValue = displayValue = '';
     display.textContent = '0';
     historyDisplay.textContent = '';
+}
+
+function deleteInput() {
+    if (displayValue.length > 0) {
+        let lastChar = displayValue.charAt(displayValue.length - 1);
+        if (isOperatorChar(lastChar)) {
+            firstNumber = null;
+        }
+        displayValue = displayValue.slice(0, -1);
+        display.textContent = displayValue;
+        lastChar = displayValue.charAt(displayValue.length - 1);
+        isOperator = false;
+        if (isOperatorChar(lastChar)) {
+            isOperator = true;
+        } else if (lastChar === '') {
+            display.textContent = '0';
+        }
+    }
+}
+
+function isOperatorChar(char) {
+    return char === '+' || char === '-' || char === '*' || char === '/' || char === '%';
 }
 
 // Operation Functions
