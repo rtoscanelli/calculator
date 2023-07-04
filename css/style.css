@@ -105,9 +105,14 @@ h1 {
     background-color: #ffa726;;
 }
 
-.clear-button {
+.clear-button,
+.delete-button {
   background-color: #ef5350;
   color: #ffffff;
+}
+
+.equal-button {
+    background-color: #66bb6a;
 }
 
 .footer {
