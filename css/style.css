@@ -43,6 +43,7 @@ h1 {
     flex-direction: column;
     align-items: flex-end;
     background-color: #f2f2f2;
+    overflow: hidden; /* Add this line */
 }
 
 #history-display {

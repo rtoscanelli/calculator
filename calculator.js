@@ -77,7 +77,8 @@ operators.forEach((operator) => {
             } else {
                 op = null;
             }
-            display.textContent = displayValue;
+            displayValue += '';
+            display.textContent = displayValue.slice(0,13);
             historyDisplay.textContent = historyValue;
         }
         isOperator = true;
@@ -115,7 +116,8 @@ function calculate(button) {
             displayValue += op;
         }
     }
-    display.textContent = displayValue;
+    displayValue += '';
+    display.textContent = displayValue.slice(0,13);
     historyDisplay.textContent = historyValue;
 }
 
@@ -161,7 +163,8 @@ function division(a, b) {
     if (b === 0) {
         return MATH_ERROR;
     }
-    return a / b;
+    // round the division to 5 decimal places
+    return Math.round((a / b) * 100000) / 100000;
 }
 
 function percentage(a, b) {
