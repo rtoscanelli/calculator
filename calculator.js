@@ -68,6 +68,7 @@ function calculate(button) {
         }
         historyValue = `${firstNumber} ${op} ${secondNumber}`;
         firstNumber = ans;
+        secondNumber = 0;
         if (button === '=') {
             op = '';
         }
